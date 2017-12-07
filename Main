@@ -1,0 +1,213 @@
+package coffeeshop;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Main {
+    
+	
+	
+	
+    public static double TotalBill = 0;
+    public static int Key = 0;
+
+    public static HashMap map = new HashMap();
+
+    
+    public static ArrayList<HotCoffee> coffee = new ArrayList<HotCoffee>(); 
+    public static ArrayList<IcedCoffee> icedCoffee = new ArrayList<IcedCoffee>();   
+    public static ArrayList<Pastry> pastries = new ArrayList<Pastry>(); 
+    public static ArrayList<Sandwich> sandwiches = new ArrayList<Sandwich>();   
+  
+    public static Stack<Double> stack = new Stack<Double>();    
+    
+    public static void main(String[] args) {
+        
+        coffee.add(new HotCoffee("Almond coffee",0.87));
+        coffee.add(new HotCoffee("Blueberry coffee",0.33));
+        coffee.add(new HotCoffee("Cherry Coffee",0.99));
+        
+        icedCoffee.add(new IcedCoffee("Vanilla Latte",1.7));
+        icedCoffee.add(new IcedCoffee("Caramel Macchiato",1.3));
+        icedCoffee.add(new IcedCoffee("Nitro Cold",1.1));
+        
+        pastries.add(new Pastry("Cherry marshmallow",1.5));
+        pastries.add(new Pastry("Strawberry buttercream",1.7));
+        pastries.add(new Pastry("Mixed berry",1.3));
+        
+        sandwiches.add(new Sandwich("Victoria",1.1));
+        sandwiches.add(new Sandwich("BBQ Pulled Chicken",1.5));
+        sandwiches.add(new Sandwich("Egg Mayo",0.99));
+        
+        menu();
+    }
+    
+    
+    public static void menu(){
+        double bill = 0;
+        Scanner in = new Scanner(System.in);    
+        
+        
+        System.out.println("MENU");
+        System.out.println("1-Hot Coffee");
+        System.out.println("2-Iced Coffee");
+        System.out.println("3-Pastries");
+        System.out.println("4-Sandwiches");
+        System.out.print("Select: ");
+        int choice = 0;
+        try{
+            choice = in.nextInt();  
+        }
+        
+        catch(Exception ex){
+            System.out.println(ex.toString());
+        }
+        
+        switch(choice){ 
+            
+            case 1: 
+            	
+                for (int a = 0; a < coffee.size(); a++) {
+                    System.out.println((a+1)+"-"+coffee.get(a).getName());
+                }
+                System.out.print("Select: ");
+                int size = 0;
+                try{
+                    choice = in.nextInt(); 
+                    
+                    
+                    System.out.println("1-Small");
+                    System.out.println("2-Medium");
+                    System.out.println("3-Large");
+                    System.out.print("Select Size: ");
+                    size = in.nextInt();    
+                }
+           
+                catch(Exception ex){
+                    System.out.println(ex.toString());
+                }
+                
+                if(size == 1){  
+                    bill = coffee.get(choice-1).getBill();
+                }
+                else if(size==2){
+                    bill = coffee.get(choice-1).getBill("medium");
+                }
+                else if(size==3){
+                    bill = coffee.get(choice-1).getBill("large");
+                }
+                map.put(Key, coffee.get(choice-1)); 
+                Key++;
+                break;
+            case 2:
+            	
+                for (int a = 0; a < icedCoffee.size(); a++) {
+                    System.out.println((a+1)+"-"+icedCoffee.get(a).getName());
+                }
+                size = 0;
+                System.out.print("Select: ");
+                try{
+                    choice = in.nextInt();
+                    
+                    
+                    System.out.println("1-Small");
+                    System.out.println("2-Medium");
+                    System.out.println("3-Large");
+                    System.out.print("Select Size: ");
+                    size = in.nextInt();    
+                }
+                
+                catch(Exception ex){
+                    System.out.println(ex.toString());
+                }
+
+                if(size == 1){
+                    bill = coffee.get(choice-1).getBill();
+                }
+                else if(size==2){
+                    bill = coffee.get(choice-1).getBill("medium");
+                }
+                else if(size==3){
+                    bill = coffee.get(choice-1).getBill("large");
+                }
+                map.put(Key, icedCoffee.get(choice-1)); 
+                Key++;
+                break;
+            case 3: 
+            	
+                for (int a = 0; a < pastries.size(); a++) {
+                    System.out.println((a+1)+"-"+pastries.get(a).getName());
+                }
+                System.out.print("Select: ");
+                try{
+                    choice = in.nextInt();  
+                }
+                catch(Exception ex){
+                    System.out.println(ex.toString());
+                }
+               
+                bill = pastries.get(choice-1).getPrice();
+                map.put(Key, pastries.get(choice-1));    //add pastry purchased, to the hashmap
+                Key++;
+                break;
+            case 4:
+            	
+                for (int a = 0; a < sandwiches.size(); a++) {
+                    System.out.println((a+1)+"-"+sandwiches.get(a).getName());
+                }
+                System.out.print("Select: ");
+                try{
+                    choice = in.nextInt();  
+                }
+                catch(Exception ex){
+                    System.out.println(ex.toString());
+                }
+                
+                bill = sandwiches.get(choice-1).getPrice();
+                map.put(Key, sandwiches.get(choice-1));  
+                Key++;
+                break;
+            default:    
+                System.out.println("Invald Input");
+                break;
+        }
+ 
+        System.out.println("Your Bill is: "+bill);  
+        stack.add(bill);    
+        bill = 0;
+        
+        System.out.print("Want to start new order? <y/n>: ");
+        char inp = in.next().charAt(0);
+        if(inp == 'y' || inp == 'Y'){
+            
+            menu();
+        }
+        else{   
+        	
+        	
+            System.out.println("Items You Purchased in this order: ");
+            for (int a = 0; a < map.size(); a++) {
+                System.out.println(map.get(a).toString());
+            }
+            
+            if(TotalBill>10){   
+                TotalBill = TotalBill*0.10; 
+            }
+            
+            for (int a = 0; a <=stack.size(); a++) {
+                TotalBill += stack.pop();
+            }
+            
+            System.out.println("Total Bill: "+TotalBill);   
+            
+            Date date = new Date();
+
+            System.out.println(date.toString());    
+            System.exit(0); 
+        }
+    }
+    
+}
